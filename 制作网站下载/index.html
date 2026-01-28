@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件下载中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .file-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .file-card:hover::before {
+            left: 100%;
+        }
+
+        .file-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .file-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .file-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .file-type {
+            display: inline-block;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .file-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 文件下载中心</h1>
+            <p>轻松获取您需要的所有文件</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 搜索文件名...">
+        </div>
+
+        <div class="file-grid" id="fileGrid">
+            <!-- 可执行文件 -->
+            <div class="file-card" data-name="inst.exe">
+                <div class="file-icon">💿</div>
+                <div class="file-name">inst.exe</div>
+                <div class="file-type">应用程序</div>
+                <a href="inst.exe" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <!-- Python安装包 -->
+            <div class="file-card" data-name="python-3.6.0-amd64.exe">
+                <div class="file-icon">🐍</div>
+                <div class="file-name">Python 3.6.0</div>
+                <div class="file-type">开发工具</div>
+                <a href="python-3.6.0-amd64.exe" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <!-- Motrix -->
+            <div class="file-card" data-name="Motrix-Setup-1.8.19.exe">
+                <div class="file-icon">⚡</div>
+                <div class="file-name">Motrix 1.8.19</div>
+                <div class="file-type">下载工具</div>
+                <a href="Motrix-Setup-1.8.19.exe" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <!-- 迅雷 -->
+            <div class="file-card" data-name="XunLeiWebSetup12.4.9.3916xl11.exe">
+                <div class="file-icon">🚀</div>
+                <div class="file-name">迅雷 12.4.9</div>
+                <div class="file-type">下载工具</div>
+                <a href="XunLeiWebSetup12.4.9.3916xl11.exe" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <!-- VirtualBox -->
+            <div class="file-card" data-name="VirtualBox-7.2.4-170995-Win.exe">
+                <div class="file-icon">🖥️</div>
+                <div class="file-name">VirtualBox 7.2.4</div>
+                <div class="file-type">虚拟机</div>
+                <a href="VirtualBox-7.2.4-170995-Win.exe" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <!-- 图片 -->
+            <div class="file-card" data-name="lo_tianyi.png">
+                <div class="file-icon">🖼️</div>
+                <div class="file-name">lo_tianyi.png</div>
+                <div class="file-type">图片</div>
+                <a href="lo_tianyi.png" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <!-- 音频文件 -->
+            <div class="file-card" data-name="birthday.mp3">
+                <div class="file-icon">🎵</div>
+                <div class="file-name">birthday.mp3</div>
+                <div class="file-type">音频</div>
+                <a href="birthday.mp3" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+
+            <div class="file-card" data-name="111.mp3">
+                <div class="file-icon">🎶</div>
+                <div class="file-name">111.mp3</div>
+                <div class="file-type">音频</div>
+                <a href="111.mp3" class="download-btn" download>⬇️ 立即下载</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <p>📊 共有 <strong id="totalFiles">8</strong> 个文件可供下载</p>
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        const fileCards = document.querySelectorAll('.file-card');
+        const totalFilesElement = document.getElementById('totalFiles');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            let visibleCount = 0;
+
+            fileCards.forEach(card => {
+                const fileName = card.getAttribute('data-name').toLowerCase();
+                if (fileName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            totalFilesElement.textContent = visibleCount;
+        });
+
+        // 下载点击效果
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                this.textContent = '✅ 下载中...';
+                setTimeout(() => {
+                    this.textContent = '⬇️ 立即下载';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
